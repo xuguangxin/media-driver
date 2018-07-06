@@ -46,6 +46,12 @@ LOCAL_CPPFLAGS = \
     -fexceptions \
     -frtti \
     -std=c++14 \
+    -Wno-unused-parameter \
+    -Wno-missing-braces \
+    -Wno-missing-field-initializers \
+    -Wno-reorder \
+    -Wno-sign-compare \
+    -Wno-overloaded-virtual \
 @LOCAL_CFLAGS
 
 LOCAL_CONLYFLAGS = -x c++
