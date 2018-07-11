@@ -73,10 +73,12 @@ LOCAL_SRC_FILES := \
     agnostic/common/codec/hal/codechal_decode_jpeg.cpp \
     agnostic/common/codec/hal/codechal_decode_mpeg2.cpp \
     agnostic/common/codec/hal/codechal_decode_nv12top010.cpp \
+    agnostic/common/codec/hal/codechal_decode_scalability.cpp \
     agnostic/common/codec/hal/codechal_decode_sfc.cpp \
     agnostic/common/codec/hal/codechal_decode_sfc_avc.cpp \
     agnostic/common/codec/hal/codechal_decode_sfc_hevc.cpp \
     agnostic/common/codec/hal/codechal_decode_sfc_jpeg.cpp \
+    agnostic/common/codec/hal/codechal_decode_singlepipe_virtualengine.cpp \
     agnostic/common/codec/hal/codechal_decode_vc1.cpp \
     agnostic/common/codec/hal/codechal_decode_vp8.cpp \
     agnostic/common/codec/hal/codechal_decode_vp9.cpp \
@@ -89,7 +91,10 @@ LOCAL_SRC_FILES := \
     agnostic/common/codec/hal/codechal_encode_hevc_base.cpp \
     agnostic/common/codec/hal/codechal_encode_jpeg.cpp \
     agnostic/common/codec/hal/codechal_encode_mpeg2.cpp \
+    agnostic/common/codec/hal/codechal_encode_scalability.cpp \
     agnostic/common/codec/hal/codechal_encode_sfc.cpp \
+    agnostic/common/codec/hal/codechal_encode_singlepipe_virtualengine.cpp \
+    agnostic/common/codec/hal/codechal_encode_sw_scoreboard.cpp \
     agnostic/common/codec/hal/codechal_encode_tracked_buffer.cpp \
     agnostic/common/codec/hal/codechal_encode_tracked_buffer_hevc.cpp \
     agnostic/common/codec/hal/codechal_encode_vp8.cpp \
@@ -142,6 +147,9 @@ LOCAL_SRC_FILES := \
     agnostic/common/os/mos_gpucontextmgr.cpp \
     agnostic/common/os/mos_graphicsresource.cpp \
     agnostic/common/os/mos_os.c \
+    agnostic/common/os/mos_os_virtualengine.cpp \
+    agnostic/common/os/mos_os_virtualengine_scalability.cpp \
+    agnostic/common/os/mos_os_virtualengine_singlepipe.cpp \
     agnostic/common/os/mos_util_debug.c \
     agnostic/common/os/mos_util_user_interface.cpp \
     agnostic/common/os/mos_utilities.c \
@@ -399,7 +407,10 @@ LOCAL_SRC_FILES := \
     linux/common/os/mos_gpucontext_specific.cpp \
     linux/common/os/mos_graphicsresource_specific.cpp \
     linux/common/os/mos_os_specific.c \
+    linux/common/os/mos_os_virtualengine_scalability_specific.cpp \
+    linux/common/os/mos_os_virtualengine_singlepipe_specific.cpp \
     linux/common/os/mos_util_debug_specific.c \
+    linux/common/os/mos_util_devult_specific.cpp \
     linux/common/os/mos_util_user_interface_specific.cpp \
     linux/common/os/mos_utilities_specific.c \
     linux/common/renderhal/renderhal_dsh_specific.c \
@@ -424,14 +435,15 @@ LOCAL_SRC_FILES := \
     linux/gen9_kbl/ddi/media_libva_caps_g9_kbl.cpp \
     linux/gen9_skl/ddi/media_libva_caps_g9_skl.cpp \
 
-LOCAL_SHARED_LIBRARIES += libsync
-LOCAL_SHARED_LIBRARIES += libbinder
-LOCAL_SHARED_LIBRARIES += libcutils
-LOCAL_SHARED_LIBRARIES += libutils
-LOCAL_SHARED_LIBRARIES += libdrm
-LOCAL_SHARED_LIBRARIES += libva
-LOCAL_SHARED_LIBRARIES += liblog
-LOCAL_SHARED_LIBRARIES += libpciaccess
+LOCAL_SHARED_LIBRARIES := \
+    libsync \
+    libcutils \
+    libutils \
+    libdrm \
+    libva \
+    liblog \
+    libpciaccess \
+
 
 LOCAL_STATIC_LIBRARIES = \
     libgmm_umd \
@@ -467,7 +479,6 @@ LOCAL_CPPFLAGS = \
     -D_MMC_SUPPORTED \
     -D_MPEG2_DECODE_SUPPORTED \
     -D_MPEG2_ENCODE_SUPPORTED \
-    -D_RELEASE \
     -D_VC1_DECODE_SUPPORTED \
     -D_VP8_DECODE_SUPPORTED \
     -D_VP8_ENCODE_SUPPORTED \
@@ -476,16 +487,12 @@ LOCAL_CPPFLAGS = \
     -D__STDC_CONSTANT_MACROS \
     -D__STDC_LIMIT_MACROS \
     -D__VPHAL_SFC_SUPPORTED=1 \
-    -DiHD_drv_video_EXPORTS \
-	-Wno-error
-
+    -DiHD_drv_video_EXPORTS
 
 LOCAL_CONLYFLAGS = -x c++
 LOCAL_CFLAGS = $(LOCAL_CPPFLAGS)
 
 LOCAL_C_INCLUDES  = \
-    $(TARGET_OUT_HEADERS)/libva \
-    $(TARGET_OUT_HEADERS)/ufo \
     $(LOCAL_PATH)/linux/common/os/libdrm/include \
     $(LOCAL_PATH)/agnostic/common/cm \
     $(LOCAL_PATH)/agnostic/common/codec/hal \
@@ -567,10 +574,7 @@ LOCAL_C_INCLUDES  = \
     $(LOCAL_PATH)/linux/gen9_cfl/ddi \
     $(LOCAL_PATH)/linux/gen10/ddi \
     $(LOCAL_PATH)/linux/gen10_cnl/ddi \
-    $(LOCAL_PATH)/../../gmmlib/Source/inc/common \
 
-
-#LOCAL_HEADER_LIBRARIES := ufo_inc_headers libgui_headers
 
 #LOCAL_CPP_FEATURES := rtti exceptions
 

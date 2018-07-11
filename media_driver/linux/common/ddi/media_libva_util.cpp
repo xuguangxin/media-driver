@@ -466,7 +466,7 @@ VAStatus DdiMediaUtil_AllocateSurface(
 
 	gmmParams.ArraySize             = 1;
 	gmmParams.Type                  = RESOURCE_2D;
-	gmmParams.Format                = DdiMediaUtil_ConvertMediaFmtToGmmFmt(format);
+	//gmmParams.Format                = DdiMediaUtil_ConvertMediaFmtToGmmFmt(format);
 
 	DDI_CHK_CONDITION(gmmParams.Format == GMM_FORMAT_INVALID, 
 		                 "Unsupported format", 
