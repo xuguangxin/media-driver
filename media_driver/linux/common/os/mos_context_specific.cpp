@@ -335,8 +335,8 @@ MOS_STATUS OsContextSpecific::CreateSSEUIPC()
         &UserFeatureData);
     m_enableDymanicSliceShutdown = UserFeatureData.i32Data;
 
-    if (m_enableDymanicSliceShutdown < 0 && m_enableDymanicSliceShutdown < -1 ||
-        m_enableDymanicSliceShutdown > 0 && (uint32_t) m_enableDymanicSliceShutdown > m_gtSystemInfo.SliceCount)
+    if (m_enableDymanicSliceShutdown < -1 ||
+        (m_enableDymanicSliceShutdown > 0 && (uint32_t) m_enableDymanicSliceShutdown > m_gtSystemInfo.SliceCount))
     {
         m_enableDymanicSliceShutdown = m_gtSystemInfo.SliceCount;
     }
